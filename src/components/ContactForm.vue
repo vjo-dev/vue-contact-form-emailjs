@@ -7,6 +7,7 @@ const namehjkl = ref("");
 const emailhjkl = ref("");
 const messagehjkl = ref("");
 const isEmailInvalid = ref(false);
+const isFormSent = ref(false);
 // otherunusedfield
 const name = ref("Steve");
 const email = ref("");
@@ -44,7 +45,11 @@ function sendEmail() {
       throw err; // rethrow
     }
   }
+  isFormSent.value = true;
+}
 
+function resetForm() {
+  isFormSent.value = false;
   // Reset fields
   namehjkl.value = "";
   emailhjkl.value = "";
@@ -60,6 +65,13 @@ function sendEmail() {
 
 <template>
   <div class="container">
+    <div
+      class="confirmation"
+      :style="isFormSent ? 'display:flex' : 'display:none'"
+    >
+      <h2>Form sent.</h2>
+      <button @click="resetForm">Ok</button>
+    </div>
     <form v-on:submit.prevent="sendEmail">
       <!-- fields -->
       <label>Name</label>
@@ -141,6 +153,7 @@ function sendEmail() {
 
 .container {
   display: block;
+  position: relative;
   margin: auto;
   text-align: center;
   border-radius: 5px;
@@ -148,6 +161,18 @@ function sendEmail() {
   padding: 20px;
   width: 50%;
   border: solid 2px green;
+}
+
+.confirmation {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgba(65, 184, 131, 0.5);
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
 }
 
 label {
@@ -168,14 +193,12 @@ textarea {
   font-size: 1em;
 }
 
-input[type="submit"]:disabled {
-  background-color: grey;
-  pointer-events: none;
-  &:hover {
-    background-color: grey;
-  }
+button:hover,
+input[type="submit"]:hover {
+  background-color: #41b883;
 }
 
+button,
 input[type="submit"] {
   background-color: #35495e;
   color: white;
@@ -183,9 +206,6 @@ input[type="submit"] {
   border: none;
   border-radius: 4px;
   cursor: pointer;
-  &:not(.disable):hover {
-    background-color: #41b883;
-  }
 }
 
 .invalid {
